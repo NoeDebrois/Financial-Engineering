@@ -86,3 +86,49 @@ fprintf("\nMax prob error with JT approximation: %.2d \n",...
 fprintf("Max intensities error with JT approximation: %.2d \n\n",...
         max(abs(intensities_accrual - intensities_JT)));
 % [3] END OF CDS BOOTSTRAPPING USING JT APPROACH --------------------------
+
+
+% PLOTS -------------------------------------------------------------------
+% Plot survival probabilities for the three methods
+figure;
+x = (0:6);  % Time index: 0 represents time 0 (settlement), then each year
+plot(x, [1; survProbs_Noaccural], '-s', 'LineWidth', 1.5, 'MarkerSize',10);
+hold on;
+plot(x, [1; survProbs_accrual], '-o', 'LineWidth', 1.1, 'MarkerSize', 5);
+plot(x, [1; survProbs_JT], '-^', 'LineWidth', 1.1, 'MarkerSize', 5);
+legend('Approximate', 'Exact', 'JT', 'Location', 'northeast');
+set(gca, 'YGrid', 'on');
+title('Survival Probabilities', 'FontSize', 14);
+xlabel('Time', 'FontSize', 12);
+ylabel('Probability', 'FontSize', 12);
+xticklabels({'02/02/23','1y','2y','3y','4y','5y','6y'});
+xtickangle(45);
+hold off;
+
+% Plot intensities for the approximate and exact methods
+figure;
+x_i = linspace(0, 6, 500);
+% Interpolate intensities for a smoother curve; using "next" interpolation 
+% method:
+plot(x_i,...
+     interp1(x, [intensities_Noaccrual(1); intensities_Noaccrual], x_i,...
+     "next", "extrap"),...
+     '-s', 'LineWidth', 1.5, 'MarkerSize', 0.75);
+hold on;
+plot(x_i,...
+     interp1(x, [intensities_accrual(1); intensities_accrual], x_i,...
+     "next", "extrap"),...
+     '-o', 'LineWidth', 1.1, 'MarkerSize', 0.55);
+plot(x_i,... 
+    interp1(x, [intensities_JT(1); intensities_JT], x_i,...
+    "next","extrap"),...
+    '-^', 'LineWidth', 1.1, 'MarkerSize', 0.55);
+legend('Approximate', 'Exact','JT ','Location', 'southeast');
+set(gca, 'YGrid', 'on');
+title('Intensities', 'FontSize', 14);
+xlabel('Time', 'FontSize', 12);
+ylabel('Intensity', 'FontSize', 12);
+xticklabels({'02/02/23','1y','2y','3y','4y','5y','6y'});
+xtickangle(45);
+hold off;
+% -------------------------------------------------------------------------
